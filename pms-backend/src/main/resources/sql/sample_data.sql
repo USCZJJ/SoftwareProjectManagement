@@ -8,10 +8,10 @@ INSERT INTO `pms_project` (`id`, `project_code`, `project_name`, `description`, 
 (1003, 'PROJ-2026-003', '数据中台建设一期', '搭建企业级数据中台，统一数据采集、清洗、存储、计算和服务链路，支撑业务数据分析和AI应用。', '1. 接入5个核心业务系统数据\n2. 构建统一数据模型和指标体系\n3. 实现实时数据同步（延迟<1分钟）\n4. 提供标准化数据API服务', '2026-05-01', '2026-09-30', 350.00, 'EXECUTING', 1);
 
 -- 2. 分配项目成员
-INSERT INTO `pms_project_member` (`project_id`, `user_id`, `role`) VALUES
-(1001, 2, 'PM'), (1001, 3, 'DEV'), (1001, 4, 'QA'),
-(1002, 2, 'PM'), (1002, 3, 'DEV'),
-(1003, 1, 'PM'), (1003, 3, 'DEV'), (1003, 4, 'QA');
+INSERT INTO `pms_project_member` (`id`, `project_id`, `user_id`, `role`) VALUES
+(1, 1001, 2, 'PM'), (2, 1001, 3, 'DEV'), (3, 1001, 4, 'QA'),
+(4, 1002, 2, 'PM'), (5, 1002, 3, 'DEV'),
+(6, 1003, 1, 'PM'), (7, 1003, 3, 'DEV'), (8, 1003, 4, 'QA');
 
 -- 3. WBS 分解 (项目1001 电商平台重构)
 INSERT INTO `pms_wbs` (`id`, `project_id`, `parent_id`, `wbs_code`, `node_name`, `description`, `assignee_id`, `planned_start`, `planned_end`, `planned_hours`, `progress`, `sort_order`) VALUES
@@ -152,23 +152,3 @@ INSERT INTO `pms_quality_check_result` (`id`, `checklist_id`, `project_id`, `res
 (3, 3, 1001, 'PASS', '订单服务Code Review完成，4个建议已处理', 3),
 (4, 4, 1001, 'PASS', '订单服务单元测试覆盖率82%，达标', 3),
 (5, 5, 1001, 'FAIL', '订单支付回调集成测试偶发失败，缺陷DEF-1001-001待修复', 4);
-
--- 15. 公告
-INSERT INTO `pms_announcement` (`id`, `title`, `content`, `type`, `scope`, `project_id`, `publisher_id`, `is_mandatory`) VALUES
-(1, '电商平台重构项目里程碑评审通知', '定于2026年7月15日下午2点进行技术方案里程碑评审会议，请项目组成员准时参加，提前准备相关材料。', 'WARNING', 'PROJECT', 1001, 2, 1),
-(2, '代码冻结通知', '数据中台项目将于2026年9月25日进入代码冻结期，在此之前请完成所有已分配的开发任务并提交Code Review。', 'INFO', 'PROJECT', 1003, 1, 0),
-(3, '国庆假期值班安排', '请各项目组在9月28日前提交国庆期间的值班人员名单和联系方式。', 'INFO', 'ALL', NULL, 1, 0);
-
--- 16. 消息通知
-INSERT INTO `pms_message` (`id`, `receiver_id`, `sender_id`, `title`, `content`, `type`, `related_id`, `is_read`) VALUES
-(1, 3, 2, '新任务分配', '您被分配了任务：订单状态机重构，优先级URGENT，请尽快处理。', 'ASSIGN', 3004, 0),
-(2, 3, 2, '任务已进入评审', '分布式事务方案验证任务已进入评审阶段，等待Code Review。', 'REVIEW', 3007, 0),
-(3, 3, 4, '缺陷待修复', '您被分配了缺陷：CRM增量同步丟数据（CRITICAL），请优先处理。', 'DEFECT', 4004, 1),
-(4, 4, 3, '缺陷修复完成', '支付状态丢失缺陷（DEF-1001-001）已修复，请验证。', 'DEFECT', 4001, 1),
-(5, 3, 1, '@提到', '项目经理在数据中台讨论中提到您：需要确认CRM数据接入的进度。', 'MENTION', NULL, 0);
-
--- 17. 工作日志
-INSERT INTO `pms_work_log` (`id`, `user_id`, `project_id`, `work_date`, `content`, `plan`) VALUES
-(1, 3, 1001, '2026-05-13', '1. 完成订单状态机核心代码编写\n2. 修复ES搜索索引mapping问题\n3. 参加技术方案评审会', '继续订单状态机开发和ES搜索优化'),
-(2, 3, 1001, '2026-05-14', '1. 优化搜索DSL提升QPS\n2. 编写状态机单元测试\n3. Code Review同事代码', 'CRM数据接入开发'),
-(3, 4, 1001, '2026-05-14', '1. 执行订单模块回归测试\n2. 发现并提交2个缺陷\n3. 编写测试报告', '执行性能测试用例');

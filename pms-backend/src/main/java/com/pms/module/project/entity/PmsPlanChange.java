@@ -5,8 +5,6 @@ import com.pms.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("pms_plan_change")
@@ -31,8 +29,6 @@ public class PmsPlanChange extends BaseEntity {
     private String status;
 
     private String approveComment;
-
-    private LocalDateTime approveTime;
 
     private String versionSnapshot;
 }

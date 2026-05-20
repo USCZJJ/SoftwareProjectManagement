@@ -46,18 +46,6 @@ CREATE TABLE `sys_permission` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限表';
 
-CREATE TABLE `sys_user_role` (
-    `user_id` BIGINT NOT NULL,
-    `role_id` BIGINT NOT NULL,
-    PRIMARY KEY (`user_id`, `role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色关联';
-
-CREATE TABLE `sys_role_permission` (
-    `role_id` BIGINT NOT NULL,
-    `perm_id` BIGINT NOT NULL,
-    PRIMARY KEY (`role_id`, `perm_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限关联';
-
 -- ==================== 项目计划 ====================
 CREATE TABLE `pms_project` (
     `id` BIGINT NOT NULL COMMENT '项目ID',
@@ -81,11 +69,16 @@ CREATE TABLE `pms_project` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目表';
 
 CREATE TABLE `pms_project_member` (
+    `id` BIGINT NOT NULL COMMENT '主键ID',
     `project_id` BIGINT NOT NULL,
     `user_id` BIGINT NOT NULL,
     `role` VARCHAR(30) COMMENT '项目角色 PM/DEV/QA/BA',
     `join_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`project_id`, `user_id`)
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted` TINYINT DEFAULT 0 COMMENT '逻辑删除',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_project_user` (`project_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目成员';
 
 CREATE TABLE `pms_wbs` (
@@ -137,6 +130,8 @@ CREATE TABLE `pms_task_dependency` (
     `dependency_type` VARCHAR(2) DEFAULT 'FS' COMMENT 'FS/SS/FF/SF',
     `lag_days` INT DEFAULT 0 COMMENT '滞后天数',
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted` TINYINT DEFAULT 0,
     PRIMARY KEY (`id`),
     INDEX `idx_project` (`project_id`),
     UNIQUE KEY `uk_dep` (`predecessor_wbs_id`, `successor_wbs_id`)
@@ -407,60 +402,6 @@ CREATE TABLE `pms_quality_check_result` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='质量检查结果';
 
 -- ==================== 通用功能 ====================
-CREATE TABLE `pms_announcement` (
-    `id` BIGINT NOT NULL,
-    `title` VARCHAR(200) NOT NULL,
-    `content` TEXT NOT NULL,
-    `type` VARCHAR(20) DEFAULT 'INFO' COMMENT 'INFO/WARNING/URGENT',
-    `scope` VARCHAR(20) DEFAULT 'ALL' COMMENT 'ALL/PROJECT',
-    `project_id` BIGINT COMMENT '项目范围',
-    `publisher_id` BIGINT COMMENT '发布人',
-    `is_mandatory` TINYINT DEFAULT 0 COMMENT '是否强制阅读',
-    `end_date` DATE COMMENT '公告截止日期',
-    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted` TINYINT DEFAULT 0,
-    PRIMARY KEY (`id`),
-    INDEX `idx_scope` (`scope`, `project_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告通知';
-
-CREATE TABLE `pms_announcement_read` (
-    `announcement_id` BIGINT NOT NULL,
-    `user_id` BIGINT NOT NULL,
-    `is_read` TINYINT DEFAULT 0,
-    `read_time` DATETIME,
-    PRIMARY KEY (`announcement_id`, `user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告已读记录';
-
-CREATE TABLE `pms_message` (
-    `id` BIGINT NOT NULL,
-    `receiver_id` BIGINT NOT NULL COMMENT '接收人',
-    `sender_id` BIGINT COMMENT '发送人(0=系统)',
-    `title` VARCHAR(200),
-    `content` TEXT,
-    `type` VARCHAR(20) COMMENT 'ASSIGN/DEFECT/REVIEW/ANNOUNCEMENT/MENTION',
-    `related_id` BIGINT COMMENT '关联业务ID',
-    `is_read` TINYINT DEFAULT 0,
-    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    INDEX `idx_receiver` (`receiver_id`, `is_read`),
-    INDEX `idx_time` (`create_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息中心';
-
-CREATE TABLE `pms_work_log` (
-    `id` BIGINT NOT NULL,
-    `user_id` BIGINT NOT NULL,
-    `project_id` BIGINT,
-    `work_date` DATE NOT NULL COMMENT '工作日期',
-    `content` TEXT NOT NULL COMMENT '工作内容',
-    `plan` TEXT COMMENT '明日计划',
-    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    INDEX `idx_user_date` (`user_id`, `work_date`),
-    INDEX `idx_project_date` (`project_id`, `work_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工作日志';
-
 -- ==================== 初始数据 ====================
 -- 默认管理员 (密码: admin123, BCrypt加密)
 INSERT INTO `sys_user` (`id`, `username`, `password`, `real_name`, `email`, `department`, `position`, `status`) VALUES

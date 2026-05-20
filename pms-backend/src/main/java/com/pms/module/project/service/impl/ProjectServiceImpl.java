@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -167,10 +167,10 @@ public class ProjectServiceImpl implements ProjectService {
         }
         wbs.setProgress(progress);
         if (progress != null && progress == 100 && wbs.getActualEnd() == null) {
-            wbs.setActualEnd(LocalDateTime.now());
+            wbs.setActualEnd(LocalDate.now());
         }
         if (progress != null && progress > 0 && wbs.getActualStart() == null) {
-            wbs.setActualStart(LocalDateTime.now());
+            wbs.setActualStart(LocalDate.now());
         }
         wbsMapper.updateById(wbs);
     }
@@ -430,7 +430,6 @@ public class ProjectServiceImpl implements ProjectService {
         }
         change.setStatus(approved ? "APPROVED" : "REJECTED");
         change.setApproveComment(comment);
-        change.setApproveTime(LocalDateTime.now());
         planChangeMapper.updateById(change);
     }
 

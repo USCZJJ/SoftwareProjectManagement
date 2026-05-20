@@ -5,7 +5,7 @@ import com.pms.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -20,9 +20,9 @@ public class PmsMilestone extends BaseEntity {
 
     private String description;
 
-    private LocalDateTime plannedDate;
+    private LocalDate plannedDate;
 
-    private LocalDateTime actualDate;
+    private LocalDate actualDate;
 
     private String status;
 }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @TableName("pms_quality_checklist")
 public class PmsQualityChecklist {
@@ -23,4 +25,6 @@ public class PmsQualityChecklist {
     private Integer weight;
 
     private Integer isRequired;
+
+    private LocalDateTime createTime;
 }

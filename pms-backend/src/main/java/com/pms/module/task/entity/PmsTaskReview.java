@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,7 +21,7 @@ public class PmsTaskReview {
     /** PASS / REJECT */
     private String result;
 
-    private BigDecimal score;
+    private Integer score;
 
     private String comment;
 

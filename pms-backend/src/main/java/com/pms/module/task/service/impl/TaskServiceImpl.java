@@ -428,9 +428,7 @@ public class TaskServiceImpl implements TaskService {
         // Calculate score (default 0-100 scale, or use provided score)
         if (review.getScore() == null) {
             // If no explicit score, default: PASS=85, REJECT=30
-            review.setScore("PASS".equals(review.getResult())
-                    ? new BigDecimal("85")
-                    : new BigDecimal("30"));
+            review.setScore("PASS".equals(review.getResult()) ? 85 : 30);
         }
 
         taskReviewMapper.insert(review);

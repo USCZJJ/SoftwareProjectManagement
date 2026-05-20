@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -27,13 +27,13 @@ public class PmsWbs extends BaseEntity {
 
     private Long assigneeId;
 
-    private LocalDateTime plannedStart;
+    private LocalDate plannedStart;
 
-    private LocalDateTime plannedEnd;
+    private LocalDate plannedEnd;
 
-    private LocalDateTime actualStart;
+    private LocalDate actualStart;
 
-    private LocalDateTime actualEnd;
+    private LocalDate actualEnd;
 
     private BigDecimal plannedHours;
 
